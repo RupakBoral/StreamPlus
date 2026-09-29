@@ -20,7 +20,7 @@ npm install
 npm run dev
 ```
 
-The application will start at `http://localhost:5173/`.
+The application will start at `http://localhost:3000/`.
 
 ### Production Build & Typecheck
 
@@ -49,28 +49,33 @@ npm run build
 
 ### Incident Summary
 
-#### Affected device and CDN
 | Dimension | Finding |
 |---|---|
-| **Affected CDN** | **Fastly** |
-| **Affected Device** | **SmartTV** |
-| **Time Window** | **Tuesday, September 25, 2026, 8:30 IST – Wednesday, September 25, 2026, 23:30 IST** |
-| **Duration** | **15 hours** |
+| **Affected CDN** | Fastly |
+| **Affected Device** | SmartTV |
+| **Time Window** | September 25, 2026, 08:30 – 23:30 IST |
+| **Duration** | ~15 hours |
 
-#### Impact
-| Dimension | Finding |
-|---|---|
-| **Total Plays Affected** | **7,413 plays (~4,813 unique viewers)** |
-| **Rebuffering Rate** | **Surged from 0.98% to 5.24%** |
-| **Average Bitrate** | **Dropped from 4.58Mbps to 2.48Mbps%** |
-| **Average Startup Time** | **Moved from 2.61 sec to 6.52 sec** |
-| **Playback Error Rate** | **0.46% to at a high of 2.11%** |
-| **Unique Views** | **868 to 2.8K unique views of SmartTV were exposed to degraded playback** |
-| **Total Plays** | **1.3K to 4.2K plays of SmartTV were exposed to degraded playback** |
+### Impact
 
+| Metric | Baseline | During Incident |
+|---|---|---|
+| Rebuffer Ratio | 0.98% | 5.24% |
+| Avg Bitrate | 4.58 Mbps | 2.48 Mbps |
+| Avg Startup Time | 2.61s | 6.52s |
+| Error Rate | 0.46% | 2.11% |
+| Plays Affected | — | ~7,413 plays |
+| Unique Viewers Affected | — | ~4,813 viewers |
 
 ### Concrete Steps Used to Discover the Incident
-1. **Initial Inspection**: With the default "Last 7 days" view and "Rebuffering" active, an isolated spike was visible on the overall traffic line chart around September 25.
-2. **CDN Grouping**: Selected `Group by: CDN` in the time-series chart. The spike was immediately isolated to the **Fastly** delivery line, while **Akamai** and **CloudFront** remained flat at their baselines.
-3. **Device Narrowing**: Now, filtering by Fastly since it was affected and grouping by `Device type` completely concentrated on **SmartTV** devices. Other devices on Fastly experienced normal playback metrics during the same window.
-4. **Average Bitrate Drop and rise in Playback Error**: Since bitrate directly implies the quality of the video, the sudden drop of bitrate during the exact time frame and increase in playback error proves it further.
+
+1. **Initial inspection** — Default "Last 7 days" view, Rebuffering metric active. An
+   isolated spike was visible on the overall traffic line chart around September 25.
+2. **CDN grouping** — Set `Group by: CDN`. The spike isolated to the Fastly line, while
+   Akamai and CloudFront remained flat at baseline.
+3. **Device narrowing** — Filtered to Fastly and set `Group by: Device`. The spike
+   concentrated on SmartTV; other devices on Fastly showed normal metrics during the
+   same window.
+4. **Cross-metric confirmation** — Average bitrate dropped and error rate rose on the
+   same Fastly/SmartTV slice during the same window, confirming a real delivery
+   degradation rather than a display artifact.
