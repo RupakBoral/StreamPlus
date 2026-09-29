@@ -20,7 +20,7 @@ npm install
 npm run dev
 ```
 
-The application will start at `http://localhost:3000/`.
+The application is available at: `https://rupakboral.github.io/StreamPlus/`.
 
 ### Production Build & Typecheck
 
